@@ -1,0 +1,10 @@
+{
+	"BuildId": "10570792",
+	"Modules": 
+	{
+		"SubstanceCore": "UE4Editor-SubstanceCore.dylib",
+		"SubstanceEditor": "UE4Editor-SubstanceEditor.dylib",
+		"SubstanceLiveLink": "UE4Editor-SubstanceLiveLink.dylib",
+		"SubstanceSource": "UE4Editor-SubstanceSource.dylib"
+	}
+}
