@@ -4,6 +4,6 @@ All rights belong to [Allegorithmic](https://www.substance3d.com/)! This reposit
 
 ## Installation
 
-Select your desired engine version branch. No need to compile; everything is ready to use. For installation, please see the official [UE4 docs](https://docs.unrealengine.com/en-US/Programming/Plugins/index.html#pluginfolders).
+Select your desired engine version branch & download/pull to your desired engine or project's Plugins folder. For further info, please see the official [UE4 docs](https://docs.unrealengine.com/en-US/Programming/Plugins/index.html#pluginfolders).
 
 ### Enjoy!

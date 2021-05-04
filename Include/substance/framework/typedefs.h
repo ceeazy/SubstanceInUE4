@@ -22,6 +22,7 @@
 #include <deque>
 #include <map>
 #include <memory>
+#include <set>
 #include <string>
 #include <sstream>
 #include <utility>
@@ -99,6 +100,9 @@ using deque = std::deque<T, aligned_allocator<T, AIR_DEFAULT_ALIGNMENT>>;
 
 template<typename K, typename V> 
 using map = std::map<K, V, std::less<K>, aligned_allocator<std::pair<const K, V>, AIR_DEFAULT_ALIGNMENT>>;
+
+template<typename K>
+using set = std::set<K, std::less<K>, aligned_allocator<K, AIR_DEFAULT_ALIGNMENT>>;
 
 template<typename... Types>
 using tuple = std::tuple<Types...>;

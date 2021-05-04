@@ -159,7 +159,7 @@ void FAssetTypeActions_SubstanceGraphInstance::ExecuteEdit(TArray<TWeakObjectPtr
 		auto Object = (*ObjIt).Get();
 		if (Object)
 		{
-			FAssetEditorManager::Get().OpenEditorForAsset(Object);
+			GEditor->GetEditorSubsystem<UAssetEditorSubsystem>()->OpenEditorForAsset(Object);
 		}
 	}
 }
@@ -206,7 +206,9 @@ void FAssetTypeActions_SubstanceGraphInstance::ExecuteResetDefault(TArray<TWeakO
 		if (Graph)
 		{
 			Substance::Helpers::ResetToDefault(Graph->Instance);
-			Substance::Helpers::RenderAsync(Graph->Instance);
+			Graph->PrepareOutputsForSave();
+			Substance::Helpers::RenderSync(Graph->Instance, true);
+			Graph->SaveAllOutputs();
 		}
 	}
 }

@@ -93,8 +93,50 @@
 		sce::Gnm::Texture gnmTexture;
 
 		/** @brief Storage-related info, needed for memory release purposes
-		           Set to NULL for texture inputs, and do not modify for regular output trextures */
+		           Set to NULL for texture inputs, and do not modify for regular output textures */
 		GnmStorageInfo storageInfo;
+
+	} SubstanceTexture;
+
+#elif defined(SUBSTANCE_PLATFORM_VULKAN)
+
+	/** @brief Substance engine texture (results) structure
+
+		Vulkan version.
+		
+		@warning Texture OUTPUT must be deleted by substanceContextTextureRelease() */
+	typedef struct SubstanceTexture_
+	{
+		/** @brief Vulkan image, 
+			If used as INPUT: must be ready for pixel read, pixel read ready
+				again after use.
+			If used as OUTPUT: ready for pixel read
+
+			Stage: VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
+			Access: VK_ACCESS_SHADER_READ_BIT,
+			Layout: VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
+			
+			@warning Handle OUTPUT must be deleted by substanceContextTextureRelease() */
+		VkImage image;
+
+		/** @brief Internal texture identifier
+			Only valid if OUTPUT. Used for texture deletion by substanceContextTextureRelease() */
+		uint32_t internalId;
+
+	} SubstanceTexture;
+
+#elif defined(SUBSTANCE_PLATFORM_SAL)
+
+	/** @brief Substance engine texture (results) structure
+
+		SAL version. */
+	typedef struct SubstanceTexture_
+	{
+		/** @brief SAL texture handle, 
+		If used as INPUT: access must be SREBufferAccessType_PixelShaderRead,
+		pixel read ready again after use.
+		If used as OUTPUT: access is SREBufferAccessType_PixelShaderRead */
+		SRETexture handle;
 
 	} SubstanceTexture;
 

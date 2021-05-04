@@ -245,7 +245,7 @@ void FSubstanceCoreModule::ShutdownModule()
 	FSubstanceStyle::Shutdown();
 	FWorldDelegates::OnPostWorldInitialization.Remove(::OnWorldInitDelegateHandle);
 	FWorldDelegates::LevelAddedToWorld.Remove(::OnLevelAddedDelegateHandle);
-
+	FTicker::GetCoreTicker().RemoveTicker(TickDelegate.GetHandle());
 	UnregisterSettings();
 
 	Substance::Helpers::TearDownSubstance();

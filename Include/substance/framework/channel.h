@@ -49,6 +49,7 @@ enum ChannelUse
 	Channel_Any,
 	Channel_Metallic,
 	Channel_Panorama,
+	Channel_PhysicalSize,
 	Channel_UNKNOWN,
 	Channel_INTERNAL_COUNT
 };

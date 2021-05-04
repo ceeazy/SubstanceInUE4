@@ -91,15 +91,30 @@ typedef enum
 	Useful on generic platform that put results in system mem (BLEND).
 	8 bits format.
 	| 2bits: channel A index | 2bits: channel B index |
-	  2bits: channel G index | 2bits: channel R index | */
+	  2bits: channel G index | 2bits: channel R index |
+
+	The mask and rshift enum values can be used to extract the index of the
+	channel in the pixel. An example to extract the index of the blue pixel:
+	index = (channelOrder & Substance_ChanOrder_MASK_B)
+				>> Substance_ChanOrder_RSHIFT_B;
+*/
 typedef enum
 {
-	Substance_ChanOrder_NC     = 0,     /**< Not applicable */
-	Substance_ChanOrder_RGBA   = 0xE4,
-	Substance_ChanOrder_BGRA   = 0xC6,
-	Substance_ChanOrder_ABGR   = 0x1B,
-	Substance_ChanOrder_ARGB   = 0x39
+	Substance_ChanOrder_NC       = 0,     /**< Not applicable */
+	Substance_ChanOrder_RGBA     = 0xE4,
+	Substance_ChanOrder_BGRA     = 0xC6,
+	Substance_ChanOrder_ABGR     = 0x1B,
+	Substance_ChanOrder_ARGB     = 0x39,
 
+	Substance_ChanOrder_MASK_R   = 0x03,
+	Substance_ChanOrder_MASK_G   = 0x0C,
+	Substance_ChanOrder_MASK_B   = 0x30,
+	Substance_ChanOrder_MASK_A   = 0xC0,
+
+	Substance_ChanOrder_RSHIFT_R = 0x00,
+	Substance_ChanOrder_RSHIFT_G = 0x02,
+	Substance_ChanOrder_RSHIFT_B = 0x04,
+	Substance_ChanOrder_RSHIFT_A = 0x06
 } SubstanceChannelsOrder;
 
 

@@ -42,6 +42,10 @@ typedef enum
 	Substance_EngineID_xb1          = Substance_EngineID_xb1avx,
 	Substance_EngineID_ps4avx       = 0x1D,   /**< PS4 CPU engine (AVX) */
 
+	Substance_EngineID_salvk        = 0x12,   /**< SAL Vulkan */
+	Substance_EngineID_vulkan       = 0x14,   /**< Vulkan */
+	Substance_EngineID_SAL          = 0x15,   /**< SAL abstraction layer API */
+
 	/* etc. */
 
 	Substance_EngineID_FORCEDWORD   = 0xFFFFFFFF /**< Force DWORD enumeration */

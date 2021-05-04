@@ -29,6 +29,16 @@ class InputImage;
 typedef void (*RenderFunction)(void *);
 
 
+//! @brief Profile events
+enum class ProfileEvent 
+{
+	LinkBegin,
+	LinkEnd,
+	ComputeBegin,
+	ComputeEnd
+};
+
+
 //! @brief Abstract base structure of per-Renderer user callbacks
 //! Inherit from this base struct and overload the virtual methods to be
 //! notified by framework per-renderer callbacks.
@@ -60,6 +70,16 @@ struct RenderCallbacks
 		size_t userData,
 		const GraphInstance* graphInstance,
 		OutputInstance* outputInstance);
+
+	//! @brief Job computed callback
+	//! @param runUid The UID of the corresponding computation (returned by
+	//! 	Renderer::run()).
+	//! @param userData The user data set at corresponding run
+	//!		(as second argument Renderer::run(xxx,userData))
+	//! This is called every time a job is completed by the renderer.
+	virtual void jobComputed(
+		UInt runUid,
+		size_t userData);
 
 	//! @brief Render process execution callback
 	//! @param renderFunction Pointer to function to call.
@@ -93,6 +113,9 @@ struct RenderCallbacks
 	virtual void fillSubstanceDevice(
 		SubstanceEngineIDEnum platformId,
 		SubstanceDevice_ *substanceDevice);
+
+	//! @brief Profiling events launched from computation thread
+	virtual void profileEvent(ProfileEvent) {}
 };
 
 

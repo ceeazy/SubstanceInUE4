@@ -132,7 +132,7 @@ void FSubstanceLiveLinkConnection::ConnectToSubstancePainter()
 
 	WebSocket = MakeUnique<FSubstanceLiveLinkWebSocket>();
 	WebSocket->OnMessageReceived().AddRaw(this, &FSubstanceLiveLinkConnection::OnMessageReceived);
-	WebSocket->Connect("localhost", 6404);
+	WebSocket->Connect(ANSI_TO_TCHAR("localhost"), 6404);
 	WebSocket->SendMessage("SEND_PROJECT_INFO {}");
 }
 
@@ -372,7 +372,7 @@ TArray<UMaterial*> FSubstanceLiveLinkConnection::GetMeshMaterials(UObject* Mesh,
 
 			if (Material == nullptr || bForceReplace)
 			{
-				UMaterial* UnrealMaterial = ReplaceMaterial(Mesh, nullptr, StaticMaterial.MaterialInterface->GetFName().ToString());
+				UMaterial* UnrealMaterial = ReplaceMaterial(Mesh, nullptr, StaticMaterial.ImportedMaterialSlotName.ToString());
 				if (UnrealMaterial == nullptr)
 					continue;
 
@@ -755,7 +755,7 @@ void FSubstanceLiveLinkConnection::RegisterPainterToUnrealMapInfo()
 	//BaseColor
 	PainterToUnrealMapInfo BaseColor;
 	BaseColor.Name = TEXT("BaseColor");
-	BaseColor.PainterExportId = TEXT("$mesh_$textureSet_BaseColor");
+	BaseColor.PainterExportId = TEXT("$mesh_$textureSet_BaseColor(.$udim)");
 	BaseColor.MaterialSamplerMapArray.Add(
 	{
 		[](UMaterial * Material)
@@ -770,7 +770,7 @@ void FSubstanceLiveLinkConnection::RegisterPainterToUnrealMapInfo()
 	//Occlussion/Roughness/Metallic
 	PainterToUnrealMapInfo OcclusionRoughnessMetallic;
 	OcclusionRoughnessMetallic.Name = TEXT("OcclusionRoughnessMetallic");
-	OcclusionRoughnessMetallic.PainterExportId = TEXT("$mesh_$textureSet_OcclusionRoughnessMetallic");
+	OcclusionRoughnessMetallic.PainterExportId = TEXT("$mesh_$textureSet_OcclusionRoughnessMetallic(.$udim)");
 	OcclusionRoughnessMetallic.MaterialSamplerMapArray.Add(
 	{
 		[](UMaterial * Material)
@@ -800,7 +800,7 @@ void FSubstanceLiveLinkConnection::RegisterPainterToUnrealMapInfo()
 	//Emission
 	PainterToUnrealMapInfo Emissive;
 	Emissive.Name = TEXT("Emissive");
-	Emissive.PainterExportId = TEXT("$mesh_$textureSet_Emissive");
+	Emissive.PainterExportId = TEXT("$mesh_$textureSet_Emissive(.$udim)");
 	Emissive.MaterialSamplerMapArray.Add(
 	{
 		[](UMaterial * Material)
@@ -814,7 +814,7 @@ void FSubstanceLiveLinkConnection::RegisterPainterToUnrealMapInfo()
 	//Normal
 	PainterToUnrealMapInfo Normal;
 	Normal.Name = TEXT("Normal");
-	Normal.PainterExportId = TEXT("$mesh_$textureSet_Normal");
+	Normal.PainterExportId = TEXT("$mesh_$textureSet_Normal(.$udim)");
 	Normal.MaterialSamplerMapArray.Add(
 	{
 		[](UMaterial * Material)
