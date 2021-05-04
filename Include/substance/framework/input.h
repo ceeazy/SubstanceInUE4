@@ -38,6 +38,7 @@ enum InputWidget
 	Input_Togglebutton,     //!< On/Off toggle button or checkbox
 	Input_Combobox,         //!< Drop down list
 	Input_Image,            //!< Image input widget
+	Input_Position,         //!< Position input widget
 	Input_INTERNAL_COUNT
 };
 
@@ -139,6 +140,12 @@ struct InputDescNumericalBase : public InputDescBase
 	//!		should be used (X,Y,Z,W).
 	vector<string> mGuiVecLabels;
 
+	//! @brief Pantone Spot Color info
+	//! @note  Only valid for color-type float3 and float4
+	//! @note  This is a string formatted like "3011,   50Z" for instance
+	//! @note  First field is the Spot Color Book ID, second field is the Spot Color ID
+	string mSpotColorInfo;
+
 	//! @brief Return if the type of this input is numerical
 	//! Helper, can be deduced from mType
 	bool isNumerical() const { return true; }
@@ -182,6 +189,10 @@ struct InputDescNumerical : public InputDescNumericalBase
 	//! @note Only relevant if widget is Input_Slider
 	bool mSliderClamp;
 
+	//! @brief If non-empty, the labels to use for False (unchecked) and True (checked) values
+	//! @note Only relevant if widget is Input_Togglebutton
+	string mLabelFalse, mLabelTrue;
+
 	//! @brief Enumeration: pairs of value and label in UTF8 format (UI only)
 	//! @note Only relevant if widget is Input_Combobox
 	EnumValues mEnumValues;
@@ -217,6 +228,9 @@ struct InputDescImage : public InputDescBase
 	//! True if the input prefers image w/ floating point format (FP16 or FP32)
 	bool mIsFPFormat : 1;
 
+	//! @brief Default color used for this input image (R/G/B/A or L/L/L/1)
+	//! If not filled in the SBSAR, { 0, 0, 0, 0 } is used.
+	Vec4Float mDefaultColor;
 
 	//! @brief Return if the type of this input is image
 	//! Helper, can be deduced from mType
@@ -239,6 +253,7 @@ struct InputDescImage : public InputDescBase
 	InputDescImage()
 		: mIsColor(true)
 		, mIsFPFormat(false)
+		, mDefaultColor(0.f, 0.f, 0.f, 0.f)
 	{
 	}
 

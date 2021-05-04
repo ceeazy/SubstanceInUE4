@@ -105,8 +105,17 @@ void FAssetTypeActions_SubstanceInstanceFactory::ExecuteInstantiate(const Substa
 	}
 
 	UObject* InstanceOuter = CreatePackage(nullptr, *ImportOptions.InstanceDestinationPath);
-	USubstanceGraphInstance* Instance = Substance::Helpers::InstantiateGraph(Factory, *Desc, InstanceOuter, ImportOptions.InstanceName, true);
-	Substance::Helpers::RenderSync(Instance->Instance);
+	USubstanceGraphInstance* Instance = Substance::Helpers::InstantiateGraph(Factory, *Desc, InstanceOuter, ImportOptions.InstanceName, true, RF_Standalone | RF_Public, ImportOptions.ParentMaterial);
+	Instance->PrepareOutputsForSave();
+
+	TArray<int32> OutputSize;
+	OutputSize.Add(GetDefault<USubstanceSettings>()->DefaultSubstanceOutputSizeX);
+	OutputSize.Add(GetDefault<USubstanceSettings>()->DefaultSubstanceOutputSizeY);
+
+	Instance->SetInputInt(TEXT("$outputsize"), OutputSize);
+
+	Substance::Helpers::RenderSync(Instance->Instance, true);
+	Instance->SaveAllOutputs();
 
 	if (ImportOptions.bCreateMaterial)
 	{

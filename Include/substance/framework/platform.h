@@ -88,6 +88,8 @@ struct IntToType { enum { Number = N }; };
 	#elif defined(SUBSTANCE_PLATFORM_D3D11XBOXONE)
 	#elif defined(SUBSTANCE_PLATFORM_OGL3)
 	#elif defined(SUBSTANCE_PLATFORM_PS4)
+	#elif defined(SUBSTANCE_PLATFORM_VULKAN)
+	#elif defined(SUBSTANCE_PLATFORM_SAL)
 	#elif defined(SUBSTANCE_PLATFORM_BLEND)
 	#else
 		// Use BLEND Substance Engine platform if not specified AND not

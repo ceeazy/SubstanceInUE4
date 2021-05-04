@@ -5,10 +5,10 @@
 #include "SubstanceCorePrivatePCH.h"
 #include <substance/framework/package.h>
 
-#include "SubstanceTexture2D.h"
 #include "SubstanceSettings.h"
 #include "SubstanceCoreHelpers.h"
 #include "SubstanceGraphInstance.h"
+#include "SubstanceOutputData.h"
 #include "SubstanceStructuresSerialization.h"
 
 #if WITH_EDITOR
@@ -22,7 +22,6 @@
 USubstanceInstanceFactory::USubstanceInstanceFactory(const class FObjectInitializer& PCIP)
 	: Super(PCIP)
 	, SubstancePackage(nullptr)
-	, GenerationMode(GetDefault<USubstanceSettings>()->DefaultGenerationMode)
 {
 	mPackageUserData.ParentFactory = this;
 }
@@ -43,40 +42,6 @@ void USubstanceInstanceFactory::BeginDestroy()
 
 	//Manually reset the package?
 	SubstancePackage.reset();
-}
-
-ESubstanceGenerationMode USubstanceInstanceFactory::GetGenerationMode() const
-{
-	if (GenerationMode == ESubstanceGenerationMode::SGM_PlatformDefault)
-	{
-		ESubstanceGenerationMode systemMode = GetDefault<USubstanceSettings>()->DefaultGenerationMode;
-
-		if (systemMode == ESubstanceGenerationMode::SGM_PlatformDefault)
-		{
-			return SGM_OnLoadAsyncAndCache;
-		}
-
-		return systemMode;
-	}
-
-	return GenerationMode;
-}
-
-bool USubstanceInstanceFactory::ShouldCacheOutput() const
-{
-//PS4 does not support caching
-#if PLATFORM_PS4
-	return false;
-#else
-	switch (GetGenerationMode())
-	{
-	case ESubstanceGenerationMode::SGM_OnLoadAsyncAndCache:
-	case ESubstanceGenerationMode::SGM_OnLoadSyncAndCache:
-		return true;
-	default:
-		return false;
-	}
-#endif
 }
 
 void USubstanceInstanceFactory::Initialize(SubstanceAir::shared_ptr<SubstanceAir::PackageDesc> Package)
@@ -152,11 +117,8 @@ void USubstanceInstanceFactory::SerializeCurrent(FArchive& Ar)
 	Ar << GenerationMode;
 	Ar << bCooked;
 
-	//Flag to determine if we need to save and load substance archive data
-	bool bLoadSubstanceArData = !(GetGenerationMode() == ESubstanceGenerationMode::SGM_Baked && bCooked);
-
 	//Serialize substance archive data
-	if (bLoadSubstanceArData && (Ar.IsLoading() || (Ar.IsSaving() && SubstancePackage)))
+	if (Ar.IsLoading() || (Ar.IsSaving() && SubstancePackage))
 	{
 		Ar << SubstancePackage;
 	}
@@ -176,7 +138,6 @@ void USubstanceInstanceFactory::SerializeCurrent(FArchive& Ar)
 void USubstanceInstanceFactory::SerializeLegacy(FArchive& Ar)
 {
 	bool bCooked = Ar.IsCooking();
-
 	Ar << GenerationMode;
 	Ar << bCooked;
 
@@ -262,7 +223,7 @@ void USubstanceInstanceFactory::PostDuplicate(bool bDuplicateForPIE)
 
 #if WITH_EDITOR
 					//Create the a default material if the others had default material
-					if (ItPrevInst->CreatedMaterial)
+					if (ItPrevInst->ConstantCreatedMaterial)
 					{
 						Substance::Helpers::CreateDefaultNamedMaterial(NewInstance);
 					}
@@ -271,7 +232,7 @@ void USubstanceInstanceFactory::PostDuplicate(bool bDuplicateForPIE)
 					{
 						if (itout->mUserData)
 						{
-							AssetList.AddUnique(reinterpret_cast<OutputInstanceData*>(itout->mUserData)->Texture.Get());
+							AssetList.AddUnique(reinterpret_cast<USubstanceOutputData*>(itout->mUserData)->GetData());
 						}
 					}
 					AssetList.AddUnique(reinterpret_cast<GraphInstanceData*>(NewInstance->Instance->mUserData)->ParentGraph.Get());

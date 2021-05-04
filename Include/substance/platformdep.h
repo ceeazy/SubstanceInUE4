@@ -11,7 +11,9 @@
       - SUBSTANCE_PLATFORM_D3D10PC: PC Direct3D10 API
       - SUBSTANCE_PLATFORM_D3D11PC: PC Direct3D11 API
       - SUBSTANCE_PLATFORM_OGL3: OpenGL 3 API
-      - SUBSTANCE_PLATFORM_PS4: PS4 GNM API
+	  - SUBSTANCE_PLATFORM_PS4: PS4 GNM API
+	  - SUBSTANCE_PLATFORM_VULKAN: Vulkan API
+	  - SUBSTANCE_PLATFORM_SAL: SAL API
       etc. */
 
 #ifndef _SUBSTANCE_PLATFORMDEP_H
@@ -68,6 +70,31 @@
 	#include <gnmx.h>
 
 	#define SUBSTANCE_API_PLATFORM Substance_EngineID_ps4gnm
+
+#elif defined(SUBSTANCE_PLATFORM_VULKAN)
+
+	/* Vulkan platform */
+	#include <stdint.h>
+
+	#ifndef VULKAN_H_
+		#define ALG_VK_DEFINE_HANDLE(object) typedef struct object##_T* object;
+		ALG_VK_DEFINE_HANDLE(VkImage)
+		ALG_VK_DEFINE_HANDLE(VkInstance)
+		ALG_VK_DEFINE_HANDLE(VkPhysicalDevice)
+		ALG_VK_DEFINE_HANDLE(VkDevice)
+		ALG_VK_DEFINE_HANDLE(VkQueue)
+		ALG_VK_DEFINE_HANDLE(VkBuffer)
+	#endif
+
+	#define SUBSTANCE_API_PLATFORM Substance_EngineID_vulkan
+
+#elif defined(SUBSTANCE_PLATFORM_SAL)
+
+	/* SAL platform */
+	#include <Graphics/sreRenderer.h>
+	#include <System/sreComponentManager.h>
+	
+	#define SUBSTANCE_API_PLATFORM Substance_EngineID_SAL
 
 #elif defined(SUBSTANCE_PLATFORM_BLEND)
 

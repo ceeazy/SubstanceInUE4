@@ -3,10 +3,10 @@
 
 #include "SubstanceStructuresSerialization.h"
 #include "SubstanceCorePrivatePCH.h"
+#include "Engine/Texture2D.h"
 #include "UObject/UObjectBaseUtility.h"
 #include "SubstanceCoreCustomVersion.h"
 #include "SubstanceGraphInstance.h"
-#include "SubstanceImageInput.h"
 #include "SubstanceCoreHelpers.h"
 #include "SubstanceCoreCustomVersion.h"
 #include "SubstanceInstanceFactory.h"
@@ -618,7 +618,7 @@ void LegacySerializeInputValue(FArchive& Ar, LegacyInput& Input, SubstanceAir::P
 				Ar << ImageSource;
 
 				//Note - Even though this is a UObject, In legacy, the only input Uobjects used are our own (USubstanceImageInput)
-				USubstanceImageInput* Image = Cast<USubstanceImageInput>(ImageSource);
+				UTexture2D* Image = Cast<UTexture2D>(ImageSource);
 				Graph->ImageSources.Add(Input.UID, Image);
 			}
 		}

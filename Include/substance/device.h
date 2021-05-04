@@ -38,6 +38,11 @@
 	#define SUBSTANCE_DEVICE_GNM 1
 #endif /* ifdef SUBSTANCE_PLATFORM_PS4 */
 
+#ifdef SUBSTANCE_PLATFORM_VULKAN
+#define SUBSTANCE_DEVICE_VULKAN 1
+#endif /* ifdef SUBSTANCE_PLATFORM_VULKAN */
+
+
 #ifdef SUBSTANCE_PLATFORM_BLEND
 	#define SUBSTANCE_DEVICE_NULL 1
 #endif /* ifdef SUBSTANCE_PLATFORM_RAWMEMORYOUTPUT */
@@ -110,6 +115,36 @@
 
 	} SubstanceDevice;
 
+#elif defined(SUBSTANCE_DEVICE_VULKAN)
+
+	/** @brief Substance engine device structure
+
+		Vulkan. Must be correctly filled when used to initialize the
+		SubstanceContext structure. */
+	typedef struct SubstanceDevice_
+	{
+		uint32_t apiVersion;               //!< Vulkan instance version
+		VkInstance instance;
+		VkPhysicalDevice physicalDevice;
+		VkDevice device;
+		void* metalDevice;                 //!< MoltenVK
+		VkQueue graphicsQueue;
+		VkQueue computeQueue;
+		VkQueue transferQueue;
+	} SubstanceDevice;
+
+#elif defined(SUBSTANCE_PLATFORM_SAL)
+
+	/** @brief Substance engine device structure
+
+		SAL abstraction layer. Must be correctly filled when used to initialize the
+		SubstanceContext structure. */
+	typedef struct SubstanceDevice_
+	{
+		const ISREComponentManager* componentManager;
+		SRERenderDevice* device;
+	} SubstanceDevice;
+
 #elif defined(SUBSTANCE_DEVICE_NULL)
 
 	/** @brief Substance engine device structure
@@ -122,9 +157,11 @@
 		    @note  Kept for historical reasons */
 		int dummy_;
 
-		/** @brief Index of the GPU to use (Windows/D3D only)
-		    @note  The GPUs are considered in the order used by the
-		           IDXGIFactory::EnumAdapters() function. */
+		/** @brief Index of the GPU to use (Windows/D3D and Vulkan only)
+		    @note  For D3D backends the GPUs are considered in the order used by
+		           the IDXGIFactory::EnumAdapters() function.
+		           For Vulkan backend the GPUs are considered in the order used
+		           by the vkEnumeratePhysicalDevices() function. */
 		SUBSTANCE_ZERO_INIT(unsigned int gpuIndex);
 
 	} SubstanceDevice;
